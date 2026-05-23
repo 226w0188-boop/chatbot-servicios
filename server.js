@@ -5,26 +5,27 @@ const { MessagingResponse } = require('twilio').twiml;
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Leer archivo JSON
 const tecnicos = JSON.parse(fs.readFileSync('tecnicos.json'));
 
 app.post('/whatsapp', (req, res) => {
 
-    console.log(req.body);
+    console.log("Mensaje recibido");
 
-    const mensaje = req.body.Body.toLowerCase();
+    const mensaje = req.body.Body
+        ? req.body.Body.toLowerCase().trim()
+        : "";
 
-    // Mensaje por defecto
     let respuesta = '👋 Bienvenido al chatbot de servicios.\n\n';
     
     respuesta += 'Servicios disponibles:\n';
     respuesta += '🔧 plomero\n';
     respuesta += '💡 electricista\n';
     respuesta += '🪚 carpintero\n\n';
-    respuesta += 'Escribe uno de los servicios para ver técnicos disponibles.';
+    respuesta += 'Escribe uno de los servicios.';
 
-    // Si existe el servicio
     if (tecnicos[mensaje]) {
 
         respuesta = `👋 Bienvenido al chatbot de servicios\n\n`;
@@ -34,20 +35,22 @@ app.post('/whatsapp', (req, res) => {
         tecnicos[mensaje].forEach((tecnico, index) => {
 
             respuesta += `${index + 1}. ${tecnico.nombre}\n`;
-            respuesta += `📞 Tel: ${tecnico.telefono}\n\n`;
+            respuesta += `📞 ${tecnico.telefono}\n\n`;
 
         });
-
     }
 
     const twiml = new MessagingResponse();
 
     twiml.message(respuesta);
 
-    res.writeHead(200, { 'Content-Type': 'text/xml' });
+    res.type('text/xml');
+    res.send(twiml.toString());
 
-    res.end(twiml.toString());
+});
 
+app.get('/', (req, res) => {
+    res.send('Servidor funcionando');
 });
 
 app.listen(3000, () => {
