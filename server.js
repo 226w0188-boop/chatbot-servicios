@@ -18,7 +18,16 @@ app.post('/whatsapp', (req, res) => {
     let respuesta = 'No encontré ese servicio.';
 
     if (tecnicos[mensaje]) {
-        respuesta = tecnicos[mensaje];
+
+        respuesta = `Estos son los ${mensaje}s disponibles:\n\n`;
+
+        tecnicos[mensaje].forEach((tecnico, index) => {
+
+            respuesta += `${index + 1}. ${tecnico.nombre}\n`;
+            respuesta += `Tel: ${tecnico.telefono}\n\n`;
+
+        });
+
     }
 
     const twiml = new MessagingResponse();
