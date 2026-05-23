@@ -15,16 +15,26 @@ app.post('/whatsapp', (req, res) => {
 
     const mensaje = req.body.Body.toLowerCase();
 
-    let respuesta = 'No encontré ese servicio.';
+    // Mensaje por defecto
+    let respuesta = '👋 Bienvenido al chatbot de servicios.\n\n';
+    
+    respuesta += 'Servicios disponibles:\n';
+    respuesta += '🔧 plomero\n';
+    respuesta += '💡 electricista\n';
+    respuesta += '🪚 carpintero\n\n';
+    respuesta += 'Escribe uno de los servicios para ver técnicos disponibles.';
 
+    // Si existe el servicio
     if (tecnicos[mensaje]) {
 
-        respuesta = `Estos son los ${mensaje}s disponibles:\n\n`;
+        respuesta = `👋 Bienvenido al chatbot de servicios\n\n`;
+
+        respuesta += `Estos son los ${mensaje}s disponibles:\n\n`;
 
         tecnicos[mensaje].forEach((tecnico, index) => {
 
             respuesta += `${index + 1}. ${tecnico.nombre}\n`;
-            respuesta += `Tel: ${tecnico.telefono}\n\n`;
+            respuesta += `📞 Tel: ${tecnico.telefono}\n\n`;
 
         });
 
