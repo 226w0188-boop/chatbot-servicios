@@ -5,32 +5,36 @@ const { MessagingResponse } = require('twilio').twiml;
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
-// Leer archivo JSON
+// Leer JSON
 const tecnicos = JSON.parse(fs.readFileSync('tecnicos.json'));
 
 app.post('/whatsapp', (req, res) => {
 
-    console.log("Mensaje recibido");
+    console.log('Mensaje recibido');
 
-    const mensaje = req.body.Body
-        ? req.body.Body.toLowerCase().trim()
-        : "";
+    const mensaje = req.body.Body.toLowerCase().trim();
 
-    let respuesta = '👋 Bienvenido al chatbot de servicios.\n\n';
-    
-    respuesta += 'Servicios disponibles:\n';
-    respuesta += '🔧 plomero\n';
-    respuesta += '💡 electricista\n';
-    respuesta += '🪚 carpintero\n\n';
-    respuesta += 'Escribe uno de los servicios.';
+    let respuesta = '';
 
-    if (tecnicos[mensaje]) {
+    // MENÚ PRINCIPAL
+    if (mensaje === 'hola' || mensaje === 'menu') {
 
-        respuesta = `👋 Bienvenido al chatbot de servicios\n\n`;
+        respuesta =
+`👋 Bienvenido al chatbot de servicios
 
-        respuesta += `Estos son los ${mensaje}s disponibles:\n\n`;
+Escribe una opción:
+
+🔧 plomero
+💡 electricista
+🪚 carpintero`;
+
+    }
+
+    // SERVICIOS
+    else if (tecnicos[mensaje]) {
+
+        respuesta = `✅ ${mensaje.toUpperCase()} DISPONIBLES:\n\n`;
 
         tecnicos[mensaje].forEach((tecnico, index) => {
 
@@ -38,19 +42,31 @@ app.post('/whatsapp', (req, res) => {
             respuesta += `📞 ${tecnico.telefono}\n\n`;
 
         });
+
+    }
+
+    // NO ENCONTRADO
+    else {
+
+        respuesta =
+`❌ No encontré ese servicio.
+
+Prueba escribiendo:
+
+- plomero
+- electricista
+- carpintero`;
+
     }
 
     const twiml = new MessagingResponse();
 
     twiml.message(respuesta);
 
-    res.type('text/xml');
-    res.send(twiml.toString());
+    res.writeHead(200, { 'Content-Type': 'text/xml' });
 
-});
+    res.end(twiml.toString());
 
-app.get('/', (req, res) => {
-    res.send('Servidor funcionando');
 });
 
 app.listen(3000, () => {
