@@ -1,5 +1,42 @@
 {
-  "electricista": "Juan Pérez - 9511234567",
-  "plomero": "Carlos López - 9519876543",
-  "computadoras": "Ana García - 9515555555"
+  "plomero": [
+    {
+      "nombre": "Juan Pérez",
+      "telefono": "2711111111"
+    },
+    {
+      "nombre": "Carlos López",
+      "telefono": "2712222222"
+    },
+    {
+      "nombre": "Miguel Hernández",
+      "telefono": "2713333333"
+    }
+  ],
+
+  "electricista": [
+    {
+      "nombre": "Pedro García",
+      "telefono": "2714444444"
+    },
+    {
+      "nombre": "Luis Ramírez",
+      "telefono": "2715555555"
+    },
+    {
+      "nombre": "José Martínez",
+      "telefono": "2716666666"
+    }
+  ],
+
+  "carpintero": [
+    {
+      "nombre": "Antonio Cruz",
+      "telefono": "2717777777"
+    },
+    {
+      "nombre": "Raúl Gómez",
+      "telefono": "2718888888"
+    }
+  ]
 }
